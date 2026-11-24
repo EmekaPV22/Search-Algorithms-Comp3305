@@ -1,7 +1,4 @@
-// All three optimized search techniques in one program, on 150,000 sorted records.
-// Build: g++ -O2 -std=c++17 search_all.cpp -o search_all
-// Run:   ./search_all            (demo + benchmark)
-//        ./search_all 123456     (search for a specific id with all three)
+
 #include <algorithm>
 #include <chrono>
 #include <iomanip>
@@ -13,7 +10,7 @@ using namespace std;
 
 struct Record { long long id; string name; double gpa; };
 
-vector<Record> makeDataset(int n) {                  // sorted by id (ids spaced 1..9 apart)
+vector<Record> makeDataset(int n)
     mt19937 rng(3305);
     uniform_int_distribution<int> gap(1, 9);
     uniform_real_distribution<double> g(2.0, 4.0);
@@ -26,7 +23,7 @@ vector<Record> makeDataset(int n) {                  // sorted by id (ids spaced
     return v;
 }
 
-// ---------------------------------------------------------------- 1. Binary search
+
 int binarySearch(const vector<Record>& a, long long key, int low, int high, int& steps) {
     while (low <= high) {
         int mid = low + (high - low) / 2;
@@ -42,7 +39,7 @@ int binarySearch(const vector<Record>& a, long long key, int& steps) {
     return binarySearch(a, key, 0, (int)a.size() - 1, steps);
 }
 
-// ---------------------------------------------------------------- 2. Interpolation search
+
 int interpolationSearch(const vector<Record>& a, long long key, int& steps) {
     int low = 0, high = (int)a.size() - 1;
     steps = 0;
@@ -58,7 +55,7 @@ int interpolationSearch(const vector<Record>& a, long long key, int& steps) {
     return -1;
 }
 
-// ---------------------------------------------------------------- 3. Exponential search
+
 int exponentialSearch(const vector<Record>& a, long long key, int& steps) {
     int n = (int)a.size();
     steps = 0;
@@ -70,7 +67,7 @@ int exponentialSearch(const vector<Record>& a, long long key, int& steps) {
     return binarySearch(a, key, bound / 2, min(bound, n - 1), steps);
 }
 
-// ---------------------------------------------------------------- demo helpers
+
 void searchAll(const vector<Record>& a, long long key) {
     int s1, s2, s3;
     int i1 = binarySearch(a, key, s1);
